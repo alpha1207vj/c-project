@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Medipass_system" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/Medipass_system" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/Medipass_system" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-fexceptions" />
+			<Add directory="include" />
+		</Compiler>
+		<Unit filename="include/console/MedipassApp.h" />
+		<Unit filename="include/console/Utils.h" />
+		<Unit filename="include/model/Administrateur.h" />
+		<Unit filename="include/model/Antecedent.h" />
+		<Unit filename="include/model/Consultation.h" />
+		<Unit filename="include/model/DossierMedical.h" />
+		<Unit filename="include/model/Patient.h" />
+		<Unit filename="include/model/ProfessionnelSante.h" />
+		<Unit filename="include/model/Utilisateur.h" />
+		<Unit filename="include/service/ServiceConsultation.h" />
+		<Unit filename="include/service/ServicePatient.h" />
+		<Unit filename="include/service/ServiceStatistiques.h" />
+		<Unit filename="include/service/ServiceUtilisateur.h" />
+		<Unit filename="main.cpp" />
+		<Unit filename="src/model/Administrateur.cpp" />
+		<Unit filename="src/model/Antecedent.cpp" />
+		<Unit filename="src/model/Consultation.cpp" />
+		<Unit filename="src/model/DossierMedical.cpp" />
+		<Unit filename="src/model/Patient.cpp" />
+		<Unit filename="src/model/ProfessionnelSante.cpp" />
+		<Unit filename="src/model/Utilisateur.cpp" />
+		<Unit filename="src/service/ServiceConsultation.cpp" />
+		<Unit filename="src/service/ServicePatient.cpp" />
+		<Unit filename="src/service/ServiceStatistiques.cpp" />
+		<Unit filename="src/service/ServiceUtilisateur.cpp" />
+		<Unit filename="src/ui/MedipassApp.cpp" />
+		<Unit filename="src/ui/Utils.cpp" />
+		<Extensions />
+	</Project>
+</CodeBlocks_project_file>

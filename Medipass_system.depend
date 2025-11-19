@@ -1,0 +1,134 @@
+# depslib dependency file v1.0
+1763570069 source:/home/gedeon/Medipass/Medipass_system/main.cpp
+	<iostream>
+	<string>
+	<chrono>
+	"service/ServiceUtilisateur.h"
+	"service/ServicePatient.h"
+	"service/ServiceConsultation.h"
+	"service/ServiceStatistiques.h"
+	"model/Administrateur.h"
+	"model/ProfessionnelSante.h"
+	"model/Patient.h"
+	"model/Consultation.h"
+	"model/DossierMedical.h"
+	"model/Antecedent.h"
+	"console/Utils.h"
+
+1763383147 /home/gedeon/Medipass/Medipass_system/include/model/Utilisateur.h
+	<string>
+
+1763415642 /home/gedeon/Medipass/Medipass_system/include/model/Administrateur.h
+	"model/Utilisateur.h"
+
+1763415644 /home/gedeon/Medipass/Medipass_system/include/model/ProfessionnelSante.h
+	<vector>
+	<chrono>
+	"model/Utilisateur.h"
+
+1763415644 /home/gedeon/Medipass/Medipass_system/include/model/Patient.h
+	<string>
+	<chrono>
+
+1763565311 /home/gedeon/Medipass/Medipass_system/include/model/DossierMedical.h
+	<vector>
+	"Patient.h"
+	"Antecedent.h"
+	"Consultation.h"
+
+1763415643 /home/gedeon/Medipass/Medipass_system/include/model/Antecedent.h
+	<string>
+	<chrono>
+
+1763415643 /home/gedeon/Medipass/Medipass_system/include/model/Consultation.h
+	<string>
+	<chrono>
+
+1763565438 source:/home/gedeon/Medipass/Medipass_system/src/model/DossierMedical.cpp
+	"model/DossierMedical.h"
+	<iostream>
+	<iomanip>
+	<ctime>
+	"model/ProfessionnelSante.h"
+
+1763385348 /home/gedeon/Medipass/Medipass_system/include/service/ServiceUtilisateur.h
+	<vector>
+	<string>
+	"model/Utilisateur.h"
+	"model/Administrateur.h"
+	"model/ProfessionnelSante.h"
+
+1763376719 /home/gedeon/Medipass/Medipass_system/include/service/ServicePatient.h
+	<vector>
+	<string>
+	"model/Patient.h"
+	"model/DossierMedical.h"
+	"model/Antecedent.h"
+
+1763555514 /home/gedeon/Medipass/Medipass_system/include/service/ServiceConsultation.h
+	<vector>
+	<string>
+	"model/Consultation.h"
+	"model/Patient.h"
+	"model/ProfessionnelSante.h"
+
+1763376510 /home/gedeon/Medipass/Medipass_system/include/service/ServiceStatistiques.h
+	"ServicePatient.h"
+	"ServiceConsultation.h"
+	"ServiceUtilisateur.h"
+
+1763557225 source:/home/gedeon/Medipass/Medipass_system/src/service/ServiceConsultation.cpp
+	"service/ServiceConsultation.h"
+	"model/DossierMedical.h"
+	<iostream>
+	<algorithm>
+
+1763376510 source:/home/gedeon/Medipass/Medipass_system/src/service/ServicePatient.cpp
+	"service/ServicePatient.h"
+	<iostream>
+
+1763552156 source:/home/gedeon/Medipass/Medipass_system/src/service/ServiceUtilisateur.cpp
+	"service/ServiceUtilisateur.h"
+	<iostream>
+
+1763377045 source:/home/gedeon/Medipass/Medipass_system/src/service/ServiceStatistiques.cpp
+	"service/ServiceStatistiques.h"
+
+1763383147 /home/gedeon/Medipass/Medipass_system/include/console/MedipassApp.h
+	<string>
+	"../service/ServicePatient.h"
+	"../service/ServiceConsultation.h"
+	"../service/ServiceUtilisateur.h"
+	"../model/Utilisateur.h"
+	"../model/Administrateur.h"
+	"../model/ProfessionnelSante.h"
+
+1763549183 source:/home/gedeon/Medipass/Medipass_system/src/ui/MedipassApp.cpp
+
+1763377990 source:/home/gedeon/Medipass/Medipass_system/src/model/Administrateur.cpp
+	"model/Administrateur.h"
+
+1763377988 source:/home/gedeon/Medipass/Medipass_system/src/model/Antecedent.cpp
+	"model/Antecedent.h"
+
+1763377986 source:/home/gedeon/Medipass/Medipass_system/src/model/Consultation.cpp
+	"model/Consultation.h"
+
+1763377989 source:/home/gedeon/Medipass/Medipass_system/src/model/Patient.cpp
+	"model/Patient.h"
+
+1763377990 source:/home/gedeon/Medipass/Medipass_system/src/model/ProfessionnelSante.cpp
+	"model/ProfessionnelSante.h"
+	"model/Consultation.h"
+
+1763377990 source:/home/gedeon/Medipass/Medipass_system/src/model/Utilisateur.cpp
+	"model/Utilisateur.h"
+
+1763566854 source:/home/gedeon/Medipass/Medipass_system/src/ui/Utils.cpp
+	"console/Utils.h"
+
+1763566760 /home/gedeon/Medipass/Medipass_system/include/console/Utils.h
+	<iostream>
+	<limits>
+	<string>
+
