@@ -17,6 +17,8 @@ public:
     int compterPatients() const;
     int compterConsultations() const;
     int compterProfessionnelsParRole(Role role) const;
+    int compterProfessionnelsParSpecialite(const std::string& specialite) const;
+    void afficherStatistiquesCompletes() const; // If you want a full display
 };
 
 #endif

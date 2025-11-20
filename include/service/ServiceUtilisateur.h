@@ -10,18 +10,23 @@
 class ServiceUtilisateur {
 private:
     std::vector<Utilisateur*> utilisateurs;
-
+    int nextId = 1;  // auto-increment ID
 public:
-    ~ServiceUtilisateur();  // declare destructor here
+    ~ServiceUtilisateur();  // Destructor
 
+    // Old method (manual ID)
     void creerUtilisateur(Utilisateur* u);
+
+    // New method: auto-generate ID
+    int creerUtilisateur(const std::string& username, const std::string& password, Role r,const std::string& speciality);
+
     void supprimerUtilisateur(int id);
     void modifierRole(int id, Role nouveauRole);
     Utilisateur* trouverUtilisateurParId(int id);
     void listerUtilisateurs() const;
-    Utilisateur* authentifier(const std::string& nomUtilisateur, const std::string& mdp); // return Utilisateur*, not bool
+    Utilisateur* authentifier(const std::string& nomUtilisateur, const std::string& mdp);
 
-    // <<< ADD THIS
+    // Access all users
     const std::vector<Utilisateur*>& getUtilisateurs() const { return utilisateurs; }
 };
 

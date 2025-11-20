@@ -22,6 +22,7 @@ private:
 
 public:
     // Constructeur initialisant les informations de base du professionnel.
+
     ProfessionnelSante(int id, const std::string& nomUtilisateur,
                        const std::string& motDePasse, const std::string& specialite);
 

@@ -10,6 +10,7 @@
 class ServicePatient {
 private:
     std::vector<Patient*> patients;
+    int nextId = 1; // initialize first patient ID
 
 public:
     // Getter for statistics and logic
@@ -21,6 +22,10 @@ public:
     void mettreAJourPatient(Patient* p);
     Patient* trouverPatientParId(int id);
     void listerPatients() const;
+      int creerPatient(const std::string& name,
+                     const std::chrono::system_clock::time_point& dob,
+                     const std::string& address,
+                     const std::string& phone);
 };
 
 #endif

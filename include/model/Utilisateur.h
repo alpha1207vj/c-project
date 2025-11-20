@@ -25,11 +25,13 @@ public:
     std::string getNomUtilisateur() const;
     std::string getMotDePasse() const;
     Role getRole() const;
+    const std::string& getMdp() const { return motDePasse; } // Add this getter
 
     // Setters
     void setNomUtilisateur(const std::string& nom);
     void setMotDePasse(const std::string& mdp);
     void setRole(Role r);
+
 
     // Method
     bool verifierMotDePasse(const std::string& mdp) const;

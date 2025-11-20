@@ -36,3 +36,30 @@ void ServicePatient::listerPatients() const {
         std::cout << "Patient: " << p->getNom() << ", Adresse: " << p->getAdresse() << std::endl;
     }
 }
+int ServicePatient::creerPatient(const std::string& name,
+                                 const std::chrono::system_clock::time_point& dob,
+                                 const std::string& address,
+                                 const std::string& phone) {
+    // Generate unique ID
+    int id;
+    bool unique = false;
+    while(!unique) {
+        id = nextId++;
+        unique = true;
+        for (auto p : patients) {
+            if (p->getId() == id) {
+                unique = false;
+                break;
+            }
+        }
+    }
+
+    Patient* p = new Patient(id, name, dob, address, phone);
+
+    // Create empty medical dossier
+    DossierMedical* dossier = new DossierMedical(p);
+    p->setDossier(dossier);
+
+    patients.push_back(p);
+    return id;
+}
