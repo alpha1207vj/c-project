@@ -1,50 +1,54 @@
-// include/model/Antecedent.h
+// =========================
+//  FICHIER: Antecedent.h
+// =========================
 #ifndef ANTECEDENT_H
 #define ANTECEDENT_H
 
 #include <string>
 #include <chrono>
 
-// Déclaration anticipée pour éviter une inclusion circulaire.
+// =========================
+//  DÉCLARATION ANTICIPÉE
+// =========================
+// Permet d'éviter les inclusions circulaires avec DossierMedical.
 class DossierMedical;
 
-// Classe représentant un antécédent médical d’un patient.
-// Peut être une maladie passée, une opération, une allergie, etc.
+// =========================
+//  CLASSE ANTECEDENT
+// =========================
+// Représente un antécédent médical d’un patient.
+// Cela peut être : une maladie passée, une opération, une allergie, etc.
 class Antecedent {
 private:
     int id;                         // Identifiant unique de l'antécédent
-    std::string description;        // Description de l'événement médical
-    std::chrono::system_clock::time_point date;
-    // Date à laquelle cet antécédent a eu lieu
-
-    DossierMedical* dossier;        // Dossier médical auquel cet antécédent appartient
+    std::string description;        // Description détaillée de l'événement médical
+    std::chrono::system_clock::time_point date; // Date de l'antécédent
+    DossierMedical* dossier;        // Pointeur vers le dossier médical associé
 
 public:
-    // Constructeur initialisant toutes les informations de l’antécédent.
+    // =========================
+    //  CONSTRUCTEUR
+    // =========================
+    // Initialise un antécédent avec :
+    // - id : identifiant unique
+    // - description : texte décrivant l'antécédent
+    // - date : date de l'événement
+    // - dossier : dossier médical auquel il est associé
     Antecedent(int id,
                const std::string& description,
                const std::chrono::system_clock::time_point& date,
                DossierMedical* dossier);
 
-    // ----- Getters / Setters -----
+    // =========================
+    //  GETTERS / SETTERS
+    // =========================
 
-    // Retourne l’identifiant.
-    int getId() const;
-
-    // Retourne la description.
-    std::string getDescription() const;
-
-    // Modifie la description.
-    void setDescription(const std::string& desc);
-
-    // Retourne la date de l’antécédent.
-    std::chrono::system_clock::time_point getDate() const;
-
-    // Modifie la date.
-    void setDate(const std::chrono::system_clock::time_point& d);
-
-    // Retourne le dossier auquel appartient cet antécédent.
-    DossierMedical* getDossier() const;
+    int getId() const;                        // Retourne l’identifiant
+    std::string getDescription() const;       // Retourne la description
+    void setDescription(const std::string& desc); // Modifie la description
+    std::chrono::system_clock::time_point getDate() const; // Retourne la date
+    void setDate(const std::chrono::system_clock::time_point& d); // Modifie la date
+    DossierMedical* getDossier() const;       // Retourne le dossier associé
 };
 
 #endif

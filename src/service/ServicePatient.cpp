@@ -143,7 +143,12 @@ if (!prof) continue;
 
         patients.push_back(p);
     }
-
+    int maxId = 0;
+for (auto p : patients) {
+    if (p->getId() > maxId)
+        maxId = p->getId();
+}
+nextId = maxId + 1;
     return true;
 }
 

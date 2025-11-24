@@ -25,27 +25,36 @@ void MedipassApp::login() {
     std::string username, password;
 
     do {
-        std::cout << "Username: ";
+        std::cout << "Username (or type STOP to quit): ";
         std::cin >> username;
+
+        if (username == "STOP") {
+            std::cout << "Stopping program...\n";
+            // Export before quitting
+            servicePatient.exportToCSV("patients.csv");
+            serviceUser.exportToCSV("users.csv");
+            exit(0);
+        }
+
         std::cout << "Password: ";
         std::cin >> password;
 
         currentUser = serviceUser.authentifier(username, password);
 
-       if(!currentUser) {
-    char r;
-    std::cout << "Login failed. Retry? (Y/N): ";
-    std::cin >> r; // <-- THIS WAS MISSING
-    if(r == 'N' || r == 'n') {
-        // Export before quitting
-        servicePatient.exportToCSV("patients.csv");
-        serviceUser.exportToCSV("users.csv");
+        if (!currentUser) {
+            char r;
+            std::cout << "Login failed. Retry? (Y/N): ";
+            std::cin >> r;
+            if (r == 'N' || r == 'n') {
+                // Export before quitting
+                servicePatient.exportToCSV("patients.csv");
+                serviceUser.exportToCSV("users.csv");
+                exit(0);
+            }
+            // Loop continues if user types Y
+        }
 
-        exit(0);
-    }
-    // If user typed Y, the loop continues
-}
-    } while(!currentUser);
+    } while (!currentUser);
 
     std::cout << "Welcome, " << currentUser->getNomUtilisateur() << "!\n";
 }
