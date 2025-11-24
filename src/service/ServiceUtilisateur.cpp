@@ -3,6 +3,10 @@
 #include "model/Administrateur.h"
 #include "model/ProfessionnelSante.h"
 #include <iostream>  // for std::cout
+#include <fstream>      // for std::ifstream, std::ofstream
+#include <sstream>      // for std::stringstream
+
+
 
 // Destructor: clean up allocated users
 ServiceUtilisateur::~ServiceUtilisateur() {
@@ -122,4 +126,57 @@ Utilisateur* ServiceUtilisateur::authentifier(const std::string& nomUtilisateur,
         if(u->getNomUtilisateur() == nomUtilisateur && u->getMdp() == mdp)
             return u;
     return nullptr;
+}
+
+bool ServiceUtilisateur::exportToCSV(const std::string& filename) const {
+    std::ofstream file(filename);
+    if(!file.is_open()) return false;
+
+    for(auto u : utilisateurs) {
+        file << u->getId() << ","
+             << u->getNomUtilisateur() << ","
+             << u->getMotDePasse() << ","
+             << static_cast<int>(u->getRole()); // store role as integer
+
+        // If professional, store speciality
+        if(u->getRole() == Role::PROFESSIONNEL_SANTE) {
+            auto prof = static_cast<ProfessionnelSante*>(u);
+            file << "," << prof->getSpecialite();
+        }
+
+        file << "\n";
+    }
+
+    file.close();
+    return true;
+}
+
+// Import users from CSV
+bool ServiceUtilisateur::importFromCSV(const std::string& filename) {
+    std::ifstream file(filename);
+    if(!file.is_open()) return false;
+
+    std::string line;
+    while(std::getline(file, line)) {
+        std::stringstream ss(line);
+        std::string idStr, username, password, roleStr, speciality;
+        std::getline(ss, idStr, ',');
+        std::getline(ss, username, ',');
+        std::getline(ss, password, ',');
+        std::getline(ss, roleStr, ',');
+
+        int id = std::stoi(idStr);
+        Role role = static_cast<Role>(std::stoi(roleStr));
+
+        // Only read speciality if professional
+        if(role == Role::PROFESSIONNEL_SANTE) {
+            std::getline(ss, speciality, ',');
+            creerUtilisateur(new ProfessionnelSante(id, username, password, speciality));
+        } else {
+            creerUtilisateur(new Administrateur(id, username, password));
+        }
+    }
+
+    file.close();
+    return true;
 }

@@ -6,7 +6,7 @@
 #include "model/Patient.h"
 #include "model/DossierMedical.h"
 #include "model/Antecedent.h"
-
+#include "service/ServiceUtilisateur.h"
 class ServicePatient {
 private:
     std::vector<Patient*> patients;
@@ -29,7 +29,8 @@ public:
       // Existing methods...
      // ✅ Export / Import
     bool exportToCSV(const std::string& filename) const;
-    bool importFromCSV(const std::string& filename);
-};
+    // In ServicePatient.h
+bool importFromCSV(const std::string& filename, ServiceUtilisateur& serviceUser);
 
+};
 #endif

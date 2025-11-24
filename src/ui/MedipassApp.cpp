@@ -12,10 +12,7 @@
 void MedipassApp::setupDefaultData() {
     using namespace std::chrono;
 
-    // Default users
-    serviceUser.creerUtilisateur(new Administrateur(1, "admin", "adminpass"));
-    serviceUser.creerUtilisateur(new ProfessionnelSante(2, "doc1", "doc1pass", "infirmier"));
-    serviceUser.creerUtilisateur(new ProfessionnelSante(3, "doc2", "doc2pass", "generalist"));
+
 
     // Default patients
     auto now = system_clock::now();
@@ -42,6 +39,8 @@ void MedipassApp::login() {
     if(r == 'N' || r == 'n') {
         // Export before quitting
         servicePatient.exportToCSV("patients.csv");
+        serviceUser.exportToCSV("users.csv");
+
         exit(0);
     }
     // If user typed Y, the loop continues
@@ -146,6 +145,10 @@ void MedipassApp::adminMenu() {
                         // Delete user
                         case 2: {
                             int id = Utils::lireEntier("User ID to delete: ");
+                            if (currentUser && currentUser->getId() == id) {
+    std::cout << "You cannot delete your own account.\n";
+    break;
+}
                             if(serviceUser.trouverUtilisateurParId(id)) {
                                 serviceUser.supprimerUtilisateur(id);
                                 std::cout << "User deleted.\n";
@@ -160,6 +163,12 @@ void MedipassApp::adminMenu() {
                          case 3: {
     int id = Utils::lireEntier("Enter User ID: ");
     Utilisateur* u = serviceUser.trouverUtilisateurParId(id);
+
+     // Prevent changing own role
+if (currentUser && currentUser->getId() == id) {
+    std::cout << "You cannot change your own role.\n";
+    break;
+}
 
     if (!u) {
         std::cout << "User not found.\n";
@@ -444,7 +453,8 @@ void MedipassApp::run() {
     setupDefaultData();
 
     // Import data automatically
-    servicePatient.importFromCSV("patients.csv");
+    servicePatient.importFromCSV("patients.csv",serviceUser);
+    serviceUser.importFromCSV("users.csv");
 
     while(true) { // Loop for multiple logins
         login();

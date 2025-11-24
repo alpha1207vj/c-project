@@ -27,10 +27,14 @@ public:
     void listerUtilisateurs() const;
     Utilisateur* authentifier(const std::string& nomUtilisateur, const std::string& mdp);
     void modifierSpecialite(int id, const std::string& nouvelleSpec);
-
+    bool exportToCSV(const std::string& filename) const;
+    bool importFromCSV(const std::string& filename);
 
     // Access all users
-    const std::vector<Utilisateur*>& getUtilisateurs() const { return utilisateurs; }
+    const std::vector<Utilisateur*>& getUtilisateurs() const { return utilisateurs; };
+    // ServiceUtilisateur.h
+Utilisateur* trouverUtilisateurParNom(const std::string& nom);
+
 };
 
 #endif

@@ -1,4 +1,5 @@
-1,Alice,2025-11-24,123 Street,111-222
-2,Bob,2025-11-24,456 Avenue,333-444
-3,jdlfkdjs,2000-01-01,kjdfksdlfjd,444555
-4,fdsjfl,2000-01-01,dklksjfkljdsl,5950595
+PatientID;Name;DOB;Address;Phone;Antecedents;Consultations
+1;Melisa Andrea;1899-12-31;COTON;333;"fdksj|2025-11-24";""
+2;Bob;1899-12-31;ALADA;444;"";""
+3;Sett;1899-12-31;DKDJ;3333;"";""
+4;gedeon;2000-01-01;fdksj;55995;"";""
