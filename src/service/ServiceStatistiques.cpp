@@ -7,7 +7,13 @@ ServiceStatistiques::ServiceStatistiques(ServicePatient* sp, ServiceConsultation
 
 // Count all consultations in the service
 int ServiceStatistiques::compterConsultations() const {
-    return serviceConsultation ? serviceConsultation->listerConsultationsParPatient(nullptr).size() : 0;
+    if (!serviceConsultation) return 0;
+
+    int total = 0;
+    for (Patient* p : servicePatient->getPatients()) {
+        total += serviceConsultation->listerConsultationsParPatient(p).size();
+    }
+    return total;
 }
 
 // Count all patients

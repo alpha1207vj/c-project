@@ -62,10 +62,29 @@ void ServiceUtilisateur::supprimerUtilisateur(int id) {
 }
 
 // Change user role
-void ServiceUtilisateur::modifierRole(int id, Role nouveauRole) {
+void ServiceUtilisateur::modifierRole(int id, Role nouveauRole, const std::string& spec) {
     Utilisateur* u = trouverUtilisateurParId(id);
-    if(u) u->setRole(nouveauRole);
+    if(!u) return;
+
+    if(nouveauRole == Role::PROFESSIONNEL_SANTE) {
+        ProfessionnelSante* newProf = new ProfessionnelSante(
+            u->getId(), u->getNomUtilisateur(), u->getMdp(), spec
+        );
+
+        // Replace in vector
+        for (size_t i = 0; i < utilisateurs.size(); ++i) {
+            if (utilisateurs[i]->getId() == id) {
+                delete utilisateurs[i];
+                utilisateurs[i] = newProf;
+                break;
+            }
+        }
+    } else {
+        // Just update role
+        u->setRole(nouveauRole);
+    }
 }
+
 
 // List all users
 void ServiceUtilisateur::listerUtilisateurs() const {
@@ -86,6 +105,16 @@ void ServiceUtilisateur::listerUtilisateurs() const {
     }
 }
 
+void ServiceUtilisateur::modifierSpecialite(int id, const std::string& nouvelleSpec) {
+    Utilisateur* u = trouverUtilisateurParId(id);
+    if (!u) return;
+
+    // Try casting to professional
+    auto prof = dynamic_cast<ProfessionnelSante*>(u);
+    if (prof) {
+        prof->setSpecialite(nouvelleSpec);
+    }
+}
 
 // Authenticate
 Utilisateur* ServiceUtilisateur::authentifier(const std::string& nomUtilisateur, const std::string& mdp) {

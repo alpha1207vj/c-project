@@ -21,10 +21,13 @@ public:
     int creerUtilisateur(const std::string& username, const std::string& password, Role r,const std::string& speciality);
 
     void supprimerUtilisateur(int id);
-    void modifierRole(int id, Role nouveauRole);
+   void modifierRole(int id, Role nouveauRole, const std::string& spec = "");
+
     Utilisateur* trouverUtilisateurParId(int id);
     void listerUtilisateurs() const;
     Utilisateur* authentifier(const std::string& nomUtilisateur, const std::string& mdp);
+    void modifierSpecialite(int id, const std::string& nouvelleSpec);
+
 
     // Access all users
     const std::vector<Utilisateur*>& getUtilisateurs() const { return utilisateurs; }

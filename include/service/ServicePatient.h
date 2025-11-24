@@ -26,6 +26,10 @@ public:
                      const std::chrono::system_clock::time_point& dob,
                      const std::string& address,
                      const std::string& phone);
+      // Existing methods...
+     // ✅ Export / Import
+    bool exportToCSV(const std::string& filename) const;
+    bool importFromCSV(const std::string& filename);
 };
 
 #endif

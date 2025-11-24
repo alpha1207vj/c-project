@@ -20,15 +20,7 @@ void MedipassApp::setupDefaultData() {
     // Default patients
     auto now = system_clock::now();
 
-    Patient* alice = new Patient(1, "Alice", now, "123 Street", "111-222");
-    DossierMedical* dAlice = new DossierMedical(alice);
-    alice->setDossier(dAlice);
-    servicePatient.creerPatient(alice);
 
-    Patient* bob = new Patient(2, "Bob", now, "456 Avenue", "333-444");
-    DossierMedical* dBob = new DossierMedical(bob);
-    bob->setDossier(dBob);
-    servicePatient.creerPatient(bob);
 }
 
 // Basic login prompt
@@ -43,13 +35,17 @@ void MedipassApp::login() {
 
         currentUser = serviceUser.authentifier(username, password);
 
-        if(!currentUser) {
-            std::cout << "Login failed. Retry? (Y/N): ";
-            char r;
-            std::cin >> r;
-            if(r == 'N' || r == 'n')
-                exit(0);
-        }
+       if(!currentUser) {
+    char r;
+    std::cout << "Login failed. Retry? (Y/N): ";
+    std::cin >> r; // <-- THIS WAS MISSING
+    if(r == 'N' || r == 'n') {
+        // Export before quitting
+        servicePatient.exportToCSV("patients.csv");
+        exit(0);
+    }
+    // If user typed Y, the loop continues
+}
     } while(!currentUser);
 
     std::cout << "Welcome, " << currentUser->getNomUtilisateur() << "!\n";
@@ -160,44 +156,68 @@ void MedipassApp::adminMenu() {
                         }
 
                         // Change user role
-                        case 3: {
-                            int id = Utils::lireEntier("User ID: ");
-                            Utilisateur* u = serviceUser.trouverUtilisateurParId(id);
+                       // Change user role
+                         case 3: {
+    int id = Utils::lireEntier("Enter User ID: ");
+    Utilisateur* u = serviceUser.trouverUtilisateurParId(id);
 
-                            if(!u) {
-                                std::cout << "User not found.\n";
-                                break;
-                            }
+    if (!u) {
+        std::cout << "User not found.\n";
+        break;
+    }
 
-                            // Prevent self-role modification
-                            if(u->getId() == currentUser->getId()) {
-                                std::cout << "Error: You cannot change your own role.\n";
-                                break;
-                            }
+    std::cout << "\nChoose new role:\n";
+    std::cout << "1. Admin\n";
+    std::cout << "2. Professional\n";
 
+    int roleChoice = Utils::lireEntier("Your choice: ");
+    Role newRole;
+    switch (roleChoice) {
+        case 1: newRole = Role::ADMINISTRATEUR; break;
+        case 2: newRole = Role::PROFESSIONNEL_SANTE; break;
+        default:
+            std::cout << "Invalid choice.\n";
+            break;
+    }
 
-                            std::string newRole;
-                            Role r;
+    std::string spec = "";
 
-                            do {
-                                std::cout << "New Role (ADMIN/PROF): ";
-                                std::getline(std::cin, newRole);
-                                std::transform(newRole.begin(), newRole.end(),
-                                               newRole.begin(), ::toupper);
+    // If new role is professional, force to choose a speciality from predefined list
+    if (newRole == Role::PROFESSIONNEL_SANTE) {
+        std::cout << "\nChoose Speciality:\n";
+        std::cout << "1. Generalist\n";
+        std::cout << "2. Infirmier\n";
+        std::cout << "3. Nurse\n";
+        std::cout << "4. Gynecologist\n";
+        std::cout << "5. Ophtalmologist\n";
 
-                                if(newRole == "ADMIN")
-                                    r = Role::ADMINISTRATEUR;
-                                else if(newRole == "PROF")
-                                    r = Role::PROFESSIONNEL_SANTE;
-                                else
-                                    std::cout << "Invalid, try again.\n";
+        int specChoice;
+        do {
+            specChoice = Utils::lireEntier("Your choice: ");
+            switch(specChoice) {
+                case 1: spec = "generalist"; break;
+                case 2: spec = "infirmier"; break;
+                case 3: spec = "nurse"; break;
+                case 4: spec = "gynecologist"; break;
+                case 5: spec = "ophtalmologist"; break;
+                default:
+                    std::cout << "Invalid choice, try again.\n";
+                    specChoice = 0;
+                    break;
+            }
+        } while(specChoice == 0);
+    }
 
-                            } while(newRole != "ADMIN" && newRole != "PROF");
+    // **Important**: replace the object with correct type
+    serviceUser.modifierRole(id, newRole, spec);
 
-                            serviceUser.modifierRole(id, r);
-                            std::cout << "Role updated.\n";
-                            break;
-                        }
+    std::cout << "Role updated successfully";
+    if(newRole == Role::PROFESSIONNEL_SANTE)
+        std::cout << " with speciality " << spec;
+    std::cout << ".\n";
+
+    break;
+}
 
                         // List all users
                         case 4:
@@ -218,7 +238,7 @@ void MedipassApp::adminMenu() {
 
             case 3:
                 std::cout << "Exiting Admin Menu...\n";
-                break;
+                return;
 
             default:
                 std::cout << "Invalid choice.\n";
@@ -409,7 +429,7 @@ void MedipassApp::professionalMenu(ProfessionnelSante* prof) {
 
             case 8:
                 std::cout << "Exiting Professional Menu...\n";
-                break;
+                return;
 
             default:
                 std::cout << "Invalid choice.\n";
@@ -422,10 +442,19 @@ void MedipassApp::professionalMenu(ProfessionnelSante* prof) {
 // ------------------ Public Method ------------------
 void MedipassApp::run() {
     setupDefaultData();
-    login();
 
-    if(currentUser->getRole() == Role::ADMINISTRATEUR)
-        adminMenu();
-    else if(currentUser->getRole() == Role::PROFESSIONNEL_SANTE)
-        professionalMenu(static_cast<ProfessionnelSante*>(currentUser));
+    // Import data automatically
+    servicePatient.importFromCSV("patients.csv");
+
+    while(true) { // Loop for multiple logins
+        login();
+
+        if(currentUser->getRole() == Role::ADMINISTRATEUR)
+            adminMenu();
+        else if(currentUser->getRole() == Role::PROFESSIONNEL_SANTE)
+            professionalMenu(static_cast<ProfessionnelSante*>(currentUser));
+
+        currentUser = nullptr;
+        std::cout << "\nReturning to login...\n";
+    }
 }
