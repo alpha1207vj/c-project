@@ -1,11 +1,19 @@
 #include "service/ServiceStatistiques.h"
 #include <algorithm>
 #include <iostream>
+#include <cctype> // pour ::tolower
 
+// =========================
+//  CONSTRUCTEUR
+// =========================
+// Initialise le service de statistiques avec les services existants
 ServiceStatistiques::ServiceStatistiques(ServicePatient* sp, ServiceConsultation* sc, ServiceUtilisateur* su)
     : servicePatient(sp), serviceConsultation(sc), serviceUtilisateur(su) {}
 
-// Count all consultations in the service
+// =========================
+//  COMPTER CONSULTATIONS
+// =========================
+// Compte toutes les consultations existantes
 int ServiceStatistiques::compterConsultations() const {
     if (!serviceConsultation) return 0;
 
@@ -16,28 +24,34 @@ int ServiceStatistiques::compterConsultations() const {
     return total;
 }
 
-// Count all patients
+// =========================
+//  COMPTER PATIENTS
+// =========================
+// Compte tous les patients
 int ServiceStatistiques::compterPatients() const {
     return servicePatient ? servicePatient->getPatients().size() : 0;
 }
 
-// Count all professionals by role
+// =========================
+//  COMPTER PROFESSIONNELS PAR ROLE
+// =========================
 int ServiceStatistiques::compterProfessionnelsParRole(Role role) const {
     int count = 0;
     if (serviceUtilisateur) {
-        // This must be inside the function!
         for (auto u : serviceUtilisateur->getUtilisateurs()) {
             if (u->getRole() == role) count++;
         }
     }
     return count;
 }
-#include <algorithm> // for std::transform
-#include <cctype>    // for ::tolower
 
+// =========================
+//  COMPTER PROFESSIONNELS PAR SPECIALITE
+// =========================
 int ServiceStatistiques::compterProfessionnelsParSpecialite(const std::string& specialite) const {
     if (!serviceUtilisateur) return 0;
 
+    // Transforme la spécialité cible en minuscules pour comparaison
     std::string target = specialite;
     std::transform(target.begin(), target.end(), target.begin(),
                    [](unsigned char c){ return std::tolower(c); });
@@ -48,6 +62,7 @@ int ServiceStatistiques::compterProfessionnelsParSpecialite(const std::string& s
         if (u->getRole() == Role::PROFESSIONNEL_SANTE) {
             auto ps = dynamic_cast<ProfessionnelSante*>(u);
             if (ps) {
+                // Transforme la spécialité de l'utilisateur en minuscules
                 std::string sp = ps->getSpecialite();
                 std::transform(sp.begin(), sp.end(), sp.begin(),
                                [](unsigned char c){ return std::tolower(c); });
@@ -60,6 +75,9 @@ int ServiceStatistiques::compterProfessionnelsParSpecialite(const std::string& s
     return count;
 }
 
+// =========================
+//  AFFICHER STATISTIQUES COMPLETES
+// =========================
 void ServiceStatistiques::afficherStatistiquesCompletes() const {
     std::cout << "=== STATISTICS ===\n";
 
@@ -68,6 +86,7 @@ void ServiceStatistiques::afficherStatistiquesCompletes() const {
 
     std::cout << "Professionals:\n";
 
+    // Liste prédéfinie des spécialités
     const std::vector<std::string> specialites = {
         "GENERALIST",
         "NURSE",
@@ -77,10 +96,11 @@ void ServiceStatistiques::afficherStatistiquesCompletes() const {
     };
 
     for (const auto& sp : specialites) {
-        // Use lowercase version of sp for counting inside the function
+        // Compte les professionnels par spécialité
         std::string spLower = sp;
         std::transform(spLower.begin(), spLower.end(), spLower.begin(),
                        [](unsigned char c){ return std::tolower(c); });
+
         std::cout << "  " << sp << ": " << compterProfessionnelsParSpecialite(spLower) << "\n";
     }
 }

@@ -11,13 +11,13 @@
 #include <iostream>
 
 // =========================
-//   EXPORT CSV
+//  EXPORT CSV
 // =========================
-
 bool ServicePatient::exportToCSV(const std::string& filename) const {
     std::ofstream file(filename);
     if (!file.is_open()) return false;
 
+    // Écrire l'entête CSV
     file << "PatientID;Name;DOB;Address;Phone;Antecedents;Consultations\n";
 
     for (Patient* p : patients) {
@@ -27,7 +27,7 @@ bool ServicePatient::exportToCSV(const std::string& filename) const {
              << p->getAdresse() << ";"
              << p->getTelephone() << ";";
 
-        // Antecedents
+        // === Antecedents ===
         std::string antecedentsStr;
         for (auto a : p->getDossier()->getAntecedents()) {
             if (!antecedentsStr.empty()) antecedentsStr += ",";
@@ -35,7 +35,7 @@ bool ServicePatient::exportToCSV(const std::string& filename) const {
         }
         file << "\"" << antecedentsStr << "\";";
 
-        // Consultations
+        // === Consultations ===
         std::string consultationsStr;
         for (auto c : p->getDossier()->getConsultations()) {
             if (!consultationsStr.empty()) consultationsStr += ",";
@@ -51,15 +51,14 @@ bool ServicePatient::exportToCSV(const std::string& filename) const {
 }
 
 // =========================
-//   IMPORT CSV
+//  IMPORT CSV
 // =========================
-
 bool ServicePatient::importFromCSV(const std::string& filename, ServiceUtilisateur& serviceUser) {
     std::ifstream file(filename);
     if (!file.is_open()) return false;
 
     std::string line;
-    std::getline(file, line); // skip header
+    std::getline(file, line); // Ignorer l'entête
 
     while (std::getline(file, line)) {
         std::stringstream ss(line);
@@ -76,16 +75,17 @@ bool ServicePatient::importFromCSV(const std::string& filename, ServiceUtilisate
         int id = std::stoi(idStr);
         auto dob = Utils::parseDate(dobStr);
 
+        // Création du patient et de son dossier
         Patient* p = new Patient(id, name, dob, address, phone);
         DossierMedical* dossier = new DossierMedical(p);
         p->setDossier(dossier);
 
-        // === Antecedents ===
+        // === Traitement des Antecedents ===
         if (antecedentsStr.size() > 2) {
-            antecedentsStr = antecedentsStr.substr(1, antecedentsStr.size() - 2); // remove quotes
+            antecedentsStr = antecedentsStr.substr(1, antecedentsStr.size() - 2); // retirer les quotes
             std::stringstream antSS(antecedentsStr);
-
             std::string entry;
+
             while (std::getline(antSS, entry, ',')) {
                 std::stringstream fields(entry);
                 std::string desc, dateStr;
@@ -103,12 +103,12 @@ bool ServicePatient::importFromCSV(const std::string& filename, ServiceUtilisate
             }
         }
 
-        // === Consultations ===
+        // === Traitement des Consultations ===
         if (consultationsStr.size() > 2) {
-            consultationsStr = consultationsStr.substr(1, consultationsStr.size() - 2);
+            consultationsStr = consultationsStr.substr(1, consultationsStr.size() - 2); // retirer quotes
             std::stringstream consSS(consultationsStr);
-
             std::string entry;
+
             while (std::getline(consSS, entry, ',')) {
                 std::stringstream fields(entry);
                 std::string idCStr, dateStr, motif, profName;
@@ -118,15 +118,17 @@ bool ServicePatient::importFromCSV(const std::string& filename, ServiceUtilisate
                 std::getline(fields, motif, '|');
                 std::getline(fields, profName, '|');
 
+                // Trouver le professionnel correspondant
                 Utilisateur* u = nullptr;
-for (auto usr : serviceUser.getUtilisateurs()) {
-    if (usr->getNomUtilisateur() == profName) { // compare strings
-        u = usr;
-        break;
-    }
-}
-ProfessionnelSante* prof = dynamic_cast<ProfessionnelSante*>(u);
-if (!prof) continue;
+                for (auto usr : serviceUser.getUtilisateurs()) {
+                    if (usr->getNomUtilisateur() == profName) {
+                        u = usr;
+                        break;
+                    }
+                }
+                ProfessionnelSante* prof = dynamic_cast<ProfessionnelSante*>(u);
+                if (!prof) continue;
+
                 dossier->ajouterConsultation(
                     new Consultation(
                         std::stoi(idCStr),
@@ -141,27 +143,31 @@ if (!prof) continue;
             }
         }
 
+        // Ajouter le patient à la liste
         patients.push_back(p);
     }
+
+    // Mettre à jour nextId pour éviter les collisions
     int maxId = 0;
-for (auto p : patients) {
-    if (p->getId() > maxId)
-        maxId = p->getId();
-}
-nextId = maxId + 1;
+    for (auto p : patients) {
+        if (p->getId() > maxId)
+            maxId = p->getId();
+    }
+    nextId = maxId + 1;
+
     return true;
 }
 
-
-
 // =========================
-//   METHODES DIVERSES
+//  METHODES DIVERSES
 // =========================
 
+// Ajouter un patient existant
 void ServicePatient::creerPatient(Patient* p) {
     patients.push_back(p);
 }
 
+// Supprimer un patient par ID
 void ServicePatient::supprimerPatient(int id) {
     for (auto it = patients.begin(); it != patients.end(); ++it) {
         if ((*it)->getId() == id) {
@@ -171,6 +177,7 @@ void ServicePatient::supprimerPatient(int id) {
     }
 }
 
+// Trouver un patient par ID
 Patient* ServicePatient::trouverPatientParId(int id) {
     for (auto p : patients) {
         if (p->getId() == id)
@@ -179,6 +186,7 @@ Patient* ServicePatient::trouverPatientParId(int id) {
     return nullptr;
 }
 
+// Mettre à jour les informations d'un patient
 void ServicePatient::mettreAJourPatient(Patient* p) {
     Patient* existing = trouverPatientParId(p->getId());
     if (existing) {
@@ -188,6 +196,7 @@ void ServicePatient::mettreAJourPatient(Patient* p) {
     }
 }
 
+// Lister tous les patients
 void ServicePatient::listerPatients() const {
     for (auto p : patients) {
         std::cout << "Patient: " << p->getNom()
@@ -196,13 +205,13 @@ void ServicePatient::listerPatients() const {
     }
 }
 
+// Créer un patient avec des informations
 int ServicePatient::creerPatient(const std::string& name,
                                  const std::chrono::system_clock::time_point& dob,
                                  const std::string& address,
                                  const std::string& phone) {
 
     int id = nextId++;
-
     Patient* p = new Patient(id, name, dob, address, phone);
 
     DossierMedical* dossier = new DossierMedical(p);
@@ -210,12 +219,4 @@ int ServicePatient::creerPatient(const std::string& name,
 
     patients.push_back(p);
     return id;
-}
-// ServiceUtilisateur.cpp
-Utilisateur* ServiceUtilisateur::trouverUtilisateurParNom(const std::string& nom) {
-    for (auto u : utilisateurs) {
-        if (u->getNomUtilisateur() == nom)
-            return u;
-    }
-    return nullptr;
 }

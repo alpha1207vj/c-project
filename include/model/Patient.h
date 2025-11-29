@@ -1,65 +1,52 @@
-// include/model/Patient.h
 #ifndef PATIENT_H
 #define PATIENT_H
 
 #include <string>
 #include <chrono>
 
-// Déclaration anticipée pour éviter une inclusion circulaire.
-// Le détail de DossierMedical sera connu dans le .cpp ou ailleurs.
-class DossierMedical;
+class DossierMedical; // Déclaration anticipée pour éviter l’inclusion circulaire
 
-// Classe représentant un patient du système.
-// Contient ses informations personnelles ainsi que son dossier médical.
+// =========================
+// CLASSE PATIENT
+// =========================
+// Représente un patient du système médical.
+// Contient :
+// - Informations personnelles
+// - Référence vers son dossier médical
 class Patient {
 private:
-    int id;   // Identifiant unique du patient
-    std::string nom;   // Nom complet du patient
-
-    // Date de naissance du patient, stockée avec std::chrono pour précision.
-    std::chrono::system_clock::time_point dateNaissance;
-
-    std::string adresse;    // Adresse du patient
-    std::string telephone;  // Numéro de téléphone
-    DossierMedical* dossier; // Pointeur vers le dossier médical associé
+    // =========================
+    // ATTRIBUTS
+    // =========================
+    int id;                           // Identifiant unique
+    std::string nom;                  // Nom complet
+    std::chrono::system_clock::time_point dateNaissance; // Date de naissance
+    std::string adresse;              // Adresse
+    std::string telephone;            // Téléphone
+    DossierMedical* dossier;          // Pointeur vers le dossier médical
 
 public:
-    // Constructeur initialisant toutes les informations principales du patient.
+    // =========================
+    // CONSTRUCTEUR
+    // =========================
     Patient(int id, const std::string& nom,
             const std::chrono::system_clock::time_point& dateNaissance,
-            const std::string& adresse, const std::string& telephone);
+            const std::string& adresse,
+            const std::string& telephone);
 
-    // ----- Getters / Setters -----
-
-    // Retourne l'identifiant unique.
-    int getId() const;
-
-    // Retourne le nom du patient.
-    std::string getNom() const;
-
-    // Modifie le nom.
-    void setNom(const std::string& n);
-
-    // Retourne la date de naissance.
-    std::chrono::system_clock::time_point getDateNaissance() const;
-
-    // Retourne l'adresse.
-    std::string getAdresse() const;
-
-    // Modifie l'adresse.
-    void setAdresse(const std::string& a);
-
-    // Retourne le numéro de téléphone.
-    std::string getTelephone() const;
-
-    // Modifie le numéro de téléphone.
-    void setTelephone(const std::string& t);
-
-    // Retourne le dossier médical associé.
-    DossierMedical* getDossier() const;
-
-    // Associe un dossier médical au patient.
-    void setDossier(DossierMedical* d);
+    // =========================
+    // GETTERS / SETTERS
+    // =========================
+    int getId() const;                        // Retourne l’identifiant
+    std::string getNom() const;               // Retourne le nom
+    void setNom(const std::string& n);        // Modifie le nom
+    std::chrono::system_clock::time_point getDateNaissance() const; // Date de naissance
+    std::string getAdresse() const;           // Retourne l’adresse
+    void setAdresse(const std::string& a);    // Modifie l’adresse
+    std::string getTelephone() const;         // Retourne le téléphone
+    void setTelephone(const std::string& t);  // Modifie le téléphone
+    DossierMedical* getDossier() const;       // Retourne le dossier médical
+    void setDossier(DossierMedical* d);       // Associe un dossier médical
 };
 
 #endif

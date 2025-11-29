@@ -1,5 +1,10 @@
-// src/model/Administrateur.cpp
 #include "model/Administrateur.h"
 
-Administrateur::Administrateur(int id, const std::string& nomUtilisateur, const std::string& motDePasse)
+// =========================
+//  CONSTRUCTEUR
+// =========================
+// L'administrateur est simplement un utilisateur avec le rôle ADMINISTRATEUR
+Administrateur::Administrateur(int id,
+                               const std::string& nomUtilisateur,
+                               const std::string& motDePasse)
     : Utilisateur(id, nomUtilisateur, motDePasse, Role::ADMINISTRATEUR) {}

@@ -4,21 +4,39 @@
 #include "ServicePatient.h"
 #include "ServiceConsultation.h"
 #include "ServiceUtilisateur.h"
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <iostream>
 
+// =========================
+//  SERVICE STATISTIQUES
+//  Calcul et affichage des statistiques pour l'application
+// =========================
 class ServiceStatistiques {
 private:
-    ServicePatient* servicePatient;
-    ServiceConsultation* serviceConsultation;
-    ServiceUtilisateur* serviceUtilisateur;
+    ServicePatient* servicePatient;           // Service de gestion des patients
+    ServiceConsultation* serviceConsultation; // Service de gestion des consultations
+    ServiceUtilisateur* serviceUtilisateur;   // Service de gestion des utilisateurs
 
 public:
+    // =========================
+    //  CONSTRUCTEUR
+    // =========================
     ServiceStatistiques(ServicePatient* sp, ServiceConsultation* sc, ServiceUtilisateur* su);
 
-    int compterPatients() const;
-    int compterConsultations() const;
-    int compterProfessionnelsParRole(Role role) const;
-    int compterProfessionnelsParSpecialite(const std::string& specialite) const;
-    void afficherStatistiquesCompletes() const; // If you want a full display
+    // =========================
+    //  MÉTHODES DE COMPTAGE
+    // =========================
+    int compterPatients() const;                             // Nombre total de patients
+    int compterConsultations() const;                        // Nombre total de consultations
+    int compterProfessionnelsParRole(Role role) const;       // Nombre de professionnels par rôle
+    int compterProfessionnelsParSpecialite(const std::string& specialite) const; // Nombre par spécialité
+
+    // =========================
+    //  AFFICHAGE
+    // =========================
+    void afficherStatistiquesCompletes() const;             // Affiche toutes les statistiques
 };
 
 #endif
